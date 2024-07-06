@@ -17,4 +17,8 @@ Here are the steps to setup the server using Ansible:
     1. $ ssh-keygen -t rsa -b 4096
     2. ssh-copy-id your_username@myserver
 2. Clone this repository to your PC..
-3. Run `ansible-playbook -i inventory.yml tasks/main.yml` from inside the cloned repository.
+3. Run the following from inside the cloned repository.
+
+```bash
+ansible-playbook -i inventory.yml --ask-become-pass -e SERVER_PUBLIC_IP=86.172.162.60 tasks/main.yml
+```

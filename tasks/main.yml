@@ -3,67 +3,8 @@
 # https://docs.ansible.com/ansible/latest/collections/community/docker/docsite/scenario_guide.html
 ---
 
-- name: Network Getting Started First Playbook
-  gather_facts: false
-  hosts: mediapc
+- name: Import home assistant playbook
+  import_playbook: homeassistant.yml
 
-  vars:
-    home_assistant_image: ghcr.io/home-assistant/home-assistant:stable
-    home_assistant_conf: ~/homeassistant/
-
-  tasks:
-
-    - name: Display the config
-      debug:
-        msg: "Hello world"
-
-    - name: Check for python requirements on the target host
-      community.general.python_requirements_info:
-        dependencies:
-          - ansible
-
-    - name: Pull default Docker image
-      community.docker.docker_image:
-        name: "{{ home_assistant_image }}"
-        source: pull
-
-
-    - name: Ensure homeassistant configuration directory exists
-      file:
-        path: "{{ home_assistant_conf }}"
-        state: directory
-
-    # - name: Copy homeassistant configuration file
-    #   copy:
-    #     src: files/homeassistant.conf
-    #     dest: /home/user/myconfig.conf
-    #     owner: user
-    #     group: user
-    #     mode: '0644'
-
-    # docker run -d \
-    #   --name homeassistant \
-    #   --privileged \
-    #   --restart=unless-stopped \
-    #   -e TZ=MY_TIME_ZONE \
-    #   -v /PATH_TO_YOUR_CONFIG:/config \
-    #   -v /run/dbus:/run/dbus:ro \
-    #   --network=host \
-    #   ghcr.io/home-assistant/home-assistant:stable
-    - name: Start home-assistant
-      community.docker.docker_container:
-        privileged: true
-        network_mode: host
-        env:
-          TZ: GMT
-        volumes:
-          - "{{ home_assistant_conf }}:/config"
-          - /var/run/dbus:/run/dbus
-        restart_policy: unless-stopped
-        image: "{{ home_assistant_image }}"
-        name: homeassistant
-        output_logs: true
-
-    # - name: Show output
-    #   ansible.builtin.debug:
-    #     msg: "{{ output.container.Output }}"
+- name: Import Wireguard playbook
+  import_playbook: wireguard.yml

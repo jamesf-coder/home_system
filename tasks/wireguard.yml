@@ -1,0 +1,62 @@
+
+# Ansible/docker guide:
+# https://docs.ansible.com/ansible/latest/collections/community/docker/docsite/scenario_guide.html
+---
+
+# Instructions at:
+# https://docs.linuxserver.io/images/docker-wireguard/#supported-architectures
+- name: Wireguard
+  gather_facts: false
+  hosts: mediapc
+
+  vars:
+    wireguard_image: lscr.io/linuxserver/wireguard
+    wireguard_conf: ~/wireguard
+
+  tasks:
+
+    - name: Check if the variable SERVER_PUBLIC_IP is set
+      fail:
+        msg: "The variable SERVER_PUBLIC_IP is not set.  Set this to your server's public IP address.  To discover your public IP address: $ curl ipv4.icanhazip.com"
+      when: SERVER_PUBLIC_IP is not defined
+
+    - name: Check for python requirements on the target host
+      community.general.python_requirements_info:
+        dependencies:
+          - ansible
+
+    - name: Pull default Docker image
+      community.docker.docker_image:
+        name: "{{ wireguard_image }}"
+        tag: latest
+        source: pull
+
+    # iptables -t nat -A POSTROUTING -o eth+ -j MASQUERADE
+    - name: Set iptables to masquarade to the LAN interface
+      ansible.builtin.iptables:
+        table: nat
+        chain: POSTROUTING
+        out_interface: enp0s25
+        jump: MASQUERADE
+      become: true
+
+    - name: Start Wireguard
+      community.docker.docker_container:
+        privileged: true
+        network_mode: host
+        env:
+          TZ: GMT
+          INTERNAL_SUBNET: 10.13.13.0
+          LOG_CONFS: "true"
+          PEERS: "1"
+          ALLOWEDIPS: "0.0.0.0/0"
+          SERVERURL: "{{ SERVER_PUBLIC_IP }}"
+          PEERDNS: "192.168.1.1" # points to my PiHole
+        volumes:
+          - "{{ wireguard_conf }}:/config"
+        ports:
+          - 51820:51820/udp
+        image: "{{ wireguard_image }}"
+        name: wireguard
+        output_logs: true
+        restart_policy: unless-stopped
