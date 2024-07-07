@@ -20,5 +20,5 @@ Here are the steps to setup the server using Ansible:
 3. Run the following from inside the cloned repository.
 
 ```bash
-ansible-playbook -i inventory.yml --ask-become-pass -e SERVER_PUBLIC_IP=86.172.162.60 tasks/main.yml
+ansible-playbook -i inventory.yml --ask-become-pass -e SERVER_PUBLIC_IP=A.B.C.D -e CLOUDFLARE_API_TOKEN=YOURCLOUDFLAREAPIKEY tasks/main.yml
 ```
