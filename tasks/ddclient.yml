@@ -1,0 +1,56 @@
+
+# Ansible/docker guide:
+# https://docs.ansible.com/ansible/latest/collections/community/docker/docsite/scenario_guide.html
+---
+
+# Instructions at:
+# https://docs.linuxserver.io/images/docker-ddclient
+- name: ddclient
+  gather_facts: false
+  hosts: mediapc
+
+  vars:
+    ddclient_image: lscr.io/linuxserver/ddclient
+    ddclient_conf: ~/ddclient
+
+  tasks:
+
+    - name: Check if the variable SERVER_PUBLIC_IP is set
+      fail:
+        msg: "The variable CLOUDFLARE_API_TOKEN is not set.  Set this to your CloudFlare's API token (not global token - specific token for DNS edits)"
+      when: CLOUDFLARE_API_TOKEN is not defined
+
+    - name: Check for python requirements on the target host
+      community.general.python_requirements_info:
+        dependencies:
+          - ansible
+
+    - name: Pull default Docker image
+      community.docker.docker_image:
+        name: "{{ ddclient_image }}"
+        tag: latest
+        source: pull
+
+    - name: Start ddclient
+      community.docker.docker_container:
+        # privileged: true
+        # network_mode: host
+        env:
+          TZ: GMT
+          PUID: "1000"
+          PGID: "1000"
+        volumes:
+          - "{{ ddclient_conf }}:/config"
+        image: "{{ ddclient_image }}"
+        name: ddclient
+        output_logs: true
+        restart_policy: unless-stopped
+
+    - name: Deploy the configuration file from template
+      template:
+        src: ../files/ddclient.conf.j2
+        dest: ~/ddclient/ddclient.conf
+        # owner: root
+        # group: root
+        # mode: '0644'
+

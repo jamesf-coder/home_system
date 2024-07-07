@@ -4,7 +4,7 @@
 ---
 
 # Instructions at:
-# https://docs.linuxserver.io/images/docker-wireguard/#supported-architectures
+# https://docs.linuxserver.io/images/docker-wireguard
 - name: Wireguard
   gather_facts: false
   hosts: mediapc
