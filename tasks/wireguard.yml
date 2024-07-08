@@ -6,7 +6,7 @@
 # Instructions at:
 # https://docs.linuxserver.io/images/docker-wireguard
 - name: Wireguard
-  gather_facts: false
+  gather_facts: true
   hosts: mediapc
 
   vars:
@@ -25,20 +25,16 @@
         dependencies:
           - ansible
 
+    - name: Ensure "eth0" network interface exists
+      fail:
+        msg: "The network interface 'eth0' does not exist."
+      when: "'eth0' not in ansible_facts['interfaces']"
+
     - name: Pull default Docker image
       community.docker.docker_image:
         name: "{{ wireguard_image }}"
         tag: latest
         source: pull
-
-    # iptables -t nat -A POSTROUTING -o eth+ -j MASQUERADE
-    - name: Set iptables to masquarade to the LAN interface
-      ansible.builtin.iptables:
-        table: nat
-        chain: POSTROUTING
-        out_interface: enp0s25
-        jump: MASQUERADE
-      become: true
 
     - name: Start Wireguard
       community.docker.docker_container:

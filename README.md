@@ -7,7 +7,7 @@ Infrastructure as Code (IaC) to setup my home system
 2. Docker can be used as non-root user
 3. Ansible setup on PC:
     1. $ ansible-galaxy collection install community.general
-    1. $ ansible-galaxy collection install community.docker
+    2. $ ansible-galaxy collection install community.docker
 
 ## Setup
 
