@@ -1,0 +1,55 @@
+
+# Ansible/docker guide:
+# https://docs.ansible.com/ansible/latest/collections/community/docker/docsite/scenario_guide.html
+---
+
+# Instructions at:
+# https://hub.docker.com/r/delfer/alpine-ftp-server
+- name: vsftp
+  gather_facts: false
+  hosts: mediapc
+
+  vars:
+    docker_build_dir: /tmp/dockerbuild
+    docker_image_name: vsftpd-alpine
+    docker_container_name: vsftpd
+    container_volume_path: /home/ftpuser/ftpfiles
+  tasks:
+
+    - name: Check for python requirements on the target host
+      community.general.python_requirements_info:
+        dependencies:
+          - ansible
+
+    - name: create build directory
+      file:
+        path: "{{ docker_build_dir }}"
+        state: directory
+
+    - name: copy Dockerfile
+      copy:
+        src: '{{item}}'
+        dest: "{{ docker_build_dir }}"
+      loop:
+        - ../files/vsftp/Dockerfile
+        - ../files/vsftp/vsftpd.conf
+
+    - name: build container image
+      docker_image:
+        name: "{{ docker_image_name }}"
+        build:
+          path: "{{ docker_build_dir }}"
+        source: build
+        state: present
+
+    - name: Ensure the FTP container is running
+      community.docker.docker_container:
+        name: "{{ docker_container_name }}"
+        image: "{{ docker_image_name }}"
+        state: started
+        restart_policy: unless-stopped
+        ports:
+          - "21:21"
+        volumes:
+          - "{{ FTP_MOUNT }}:{{ container_volume_path }}"
+        output_logs: true

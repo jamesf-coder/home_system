@@ -11,3 +11,6 @@
 
 - name: Import ddclient playbook
   import_playbook: ddclient.yml
+
+- name: Import vsftp playbook
+  import_playbook: vsftp.yml
