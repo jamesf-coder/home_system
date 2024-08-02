@@ -23,14 +23,15 @@ Here are the steps to setup the server using Ansible:
 
 The following env vars are required to be specified:
 
-* `SERVER_PUBLIC_IP` - Public IP of the server to be setup.
+* `SERVER_PUBLIC_IP` - Public IP of the server to be setup - for Wireguard, get's updated by ddclient.
 * `CLOUDFLARE_API_TOKEN` - Cloudflare API token for DNS updates
 * `FTP_MOUNT` - Mount point for FTP server
+* `JELLYFIN_MEDIA_DIR` - Source of the Jellyfin media directory
 
 ## Running ansible
 
 Example command to run ansible:
 
 ```bash
-ansible-playbook -i inventory.yml --ask-become-pass -e SERVER_PUBLIC_IP=A.B.C.D -e CLOUDFLARE_API_TOKEN=YOURCLOUDFLAREAPIKEY -e FTP_MOUNT=/ftp/mount/point tasks/main.yml
+ansible-playbook -i inventory.yml --ask-become-pass -e SERVER_PUBLIC_IP=A.B.C.D -e CLOUDFLARE_API_TOKEN=YOURCLOUDFLAREAPIKEY -e FTP_MOUNT=/ftp/mount/point -e JELLYFIN_MEDIA_DIR=/path/to/media tasks/main.yml
 ```

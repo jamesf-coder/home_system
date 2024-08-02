@@ -1,0 +1,47 @@
+
+# Ansible/docker guide:
+# https://docs.ansible.com/ansible/latest/collections/community/docker/docsite/scenario_guide.html
+---
+
+# Instructions at:
+#   https://jellyfin.org/docs/general/installation/container/
+- name: jellyfin
+  gather_facts: false
+  hosts: mediapc
+
+  vars:
+    jellyfin_image: jellyfin/jellyfin
+    jellyfin_conf: ~/jellyfin_config
+    jellyfin_cache: ~/jellyfin_cache
+
+  tasks:
+
+    - name: Check for python requirements on the target host
+      community.general.python_requirements_info:
+        dependencies:
+          - ansible
+
+    - name: Pull default Docker image
+      community.docker.docker_image:
+        name: "{{ jellyfin_image }}"
+        tag: latest
+        source: pull
+
+    - name: Start jellyfin
+      community.docker.docker_container:
+        # privileged: true
+        network_mode: host
+        env:
+          UID: "GID"
+        volumes:
+          - "{{ jellyfin_conf }}:/config"
+          - "{{ jellyfin_cache }}:/cache"
+        mounts:
+          - source: "{{ JELLYFIN_MEDIA_DIR }}"
+            target: /media
+            type: bind
+        image: "{{ jellyfin_image }}"
+        name: jellyfin
+        output_logs: true
+        restart_policy: unless-stopped
+
