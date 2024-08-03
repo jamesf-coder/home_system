@@ -19,9 +19,9 @@ Here are the steps to setup the server using Ansible:
 2. Clone this repository to your PC..
 3. Run the following from inside the cloned repository.
 
-## Environment variables
+## Variables
 
-The following env vars are required to be specified:
+Copy the example.envvars.yaml file into envvars.yaml and update the variables as per your setup.
 
 * `SERVER_PUBLIC_IP` - Public IP of the server to be setup - for Wireguard, get's updated by ddclient.
 * `CLOUDFLARE_API_TOKEN` - Cloudflare API token for DNS updates
@@ -33,5 +33,5 @@ The following env vars are required to be specified:
 Example command to run ansible:
 
 ```bash
-ansible-playbook -i inventory.yml --ask-become-pass -e SERVER_PUBLIC_IP=A.B.C.D -e CLOUDFLARE_API_TOKEN=YOURCLOUDFLAREAPIKEY -e FTP_MOUNT=/ftp/mount/point -e JELLYFIN_MEDIA_DIR=/path/to/media tasks/main.yml
+ansible-playbook -i inventory.yml --ask-become-pass -e "@envvars.yaml" tasks/main.yml
 ```

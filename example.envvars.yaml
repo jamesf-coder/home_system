@@ -1,0 +1,5 @@
+SERVER_PUBLIC_IP: 123.123.123.123
+CLOUDFLARE_API_TOKEN: abcdefgh
+FTP_MOUNT: /mount/ftp
+JELLYFIN_MEDIA_DIR: /media/jellyfin
+
