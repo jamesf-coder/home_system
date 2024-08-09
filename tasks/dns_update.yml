@@ -1,0 +1,46 @@
+# Add a DNS update cron job
+---
+
+# Instructions at:
+- name: dns_update
+  gather_facts: false
+  hosts: mediapc
+  become: yes
+
+  vars:
+
+  tasks:
+
+    - name: Ensure curl is installed
+      ansible.builtin.package:
+        name: curl
+        state: present
+
+    - name: Ensure jq is installed
+      ansible.builtin.package:
+        name: jq
+        state: present
+      become: true
+
+    - name: Copy update script to /opt/
+      ansible.builtin.copy:
+        src: ../files/update_dns.sh
+        dest: /opt/update_dns.sh
+      become: true
+
+    - name: Ensure script is runnable
+      file:
+        path: /opt/update_dns.sh
+        mode: '0755'
+        state: touch
+
+    - name: Run the dns update script
+      command: /opt/update_dns.sh
+
+    - name: Add cron job to call the update_dns.sh script
+      ansible.builtin.cron:
+        name: "update_dns"
+        minute: "0,5,10,15,20,25,30,35,40,45,50,55"
+        hour: "*"
+        job: "/opt/update_dns.sh > /dev/null"
+        user: root

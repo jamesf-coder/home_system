@@ -1,5 +1,6 @@
 SERVER_PUBLIC_IP: 123.123.123.123
+CLOUDFLARE_AUTH_EMAIL: youremail@domain.com
 CLOUDFLARE_API_TOKEN: abcdefgh
 FTP_MOUNT: /mount/ftp
 JELLYFIN_MEDIA_DIR: /media/jellyfin
-
+DNS_REC: mydomain.net

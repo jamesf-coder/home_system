@@ -9,8 +9,8 @@
 - name: Import Wireguard playbook
   import_playbook: wireguard.yml
 
-- name: Import ddclient playbook
-  import_playbook: ddclient.yml
+- name: Import dns_update playbook
+  import_playbook: dns_update.yml
 
 # - name: Import vsftp playbook
 #   import_playbook: vsftp.yml
