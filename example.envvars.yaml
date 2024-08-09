@@ -4,3 +4,4 @@ CLOUDFLARE_API_TOKEN: abcdefgh
 FTP_MOUNT: /mount/ftp
 JELLYFIN_MEDIA_DIR: /media/jellyfin
 DNS_REC: mydomain.net
+RCLONE_MUSIC_DESTINATION: /media/music

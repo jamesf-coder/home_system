@@ -1,0 +1,20 @@
+# Add a cron job to rclone with OneDrive to a media folder
+---
+
+# Instructions at:
+- name: rclone_cronjob
+  gather_facts: false
+  hosts: mediapc
+  become: true  
+
+  vars:
+
+  tasks:
+
+    - name: Add cron job to call the rclone sync command on my Music folder on OneDrive
+      ansible.builtin.cron:
+        name: "rclone"
+        minute: "30"
+        hour: "*"
+        job: "rclone sync onedrive:/Music {{ RCLONE_MUSIC_DESTINATION }} -P"
+        user: root

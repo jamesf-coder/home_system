@@ -17,3 +17,6 @@
 
 - name: Import jellyfin playbook
   import_playbook: jellyfin.yml
+
+- name: Import rclone playbook
+  import_playbook: rclone.yml
