@@ -42,5 +42,5 @@
         name: "update_dns"
         minute: "0,5,10,15,20,25,30,35,40,45,50,55"
         hour: "*"
-        job: "/opt/update_dns.sh > /dev/null"
+        job: "/opt/update_dns.sh {{ CLOUDFLARE_DNS_REC }} {{ CLOUDFLARE_AUTH_EMAIL }} {{ CLOUDFLARE_API_TOKEN }} > /dev/null"
         user: root
