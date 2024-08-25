@@ -5,7 +5,7 @@
 - name: dns_update
   gather_facts: false
   hosts: mediapc
-  become: yes
+  become: true
 
   vars:
 

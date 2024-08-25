@@ -5,11 +5,19 @@
 - name: rclone_cronjob
   gather_facts: false
   hosts: mediapc
-  become: true  
+  become: true
 
   vars:
 
   tasks:
+
+    - name: Install packages
+      apt:
+        pkg:
+          - rclone
+        state: latest
+        update_cache: true
+      become: true
 
     - name: Add cron job to call the rclone sync command on my Music folder on OneDrive
       ansible.builtin.cron:

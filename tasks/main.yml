@@ -12,8 +12,8 @@
 - name: Import dns_update playbook
   import_playbook: dns_update.yml
 
-# - name: Import vsftp playbook
-#   import_playbook: vsftp.yml
+- name: Import ftp playbook
+  import_playbook: ftp_server.yml
 
 - name: Import jellyfin playbook
   import_playbook: jellyfin.yml

@@ -23,7 +23,7 @@ Here are the steps to setup the server using Ansible:
 
 Copy the example.envvars.yaml file into envvars.yaml and update the variables as per your setup.
 
-* `SERVER_PUBLIC_IP` - Public IP of the server to be setup - for Wireguard, get's updated by ddclient.
+* `SERVER_PUBLIC_IP` - Public IP of the server to be setup - for Wireguard, get's updated by update_dns cronjob.
 * `CLOUDFLARE_API_TOKEN` - Cloudflare API token for DNS updates
 * `FTP_MOUNT` - Mount point for FTP server
 * `JELLYFIN_MEDIA_DIR` - Source of the Jellyfin media directory

@@ -1,0 +1,28 @@
+# FTP Server setup
+---
+
+- name: ftp_server
+  gather_facts: false
+  hosts: mediapc
+
+  vars:
+
+  tasks:
+    - name: Deploy the configuration file from template
+      template:
+        src: ../files/vsftp/vsftpd.conf.j2
+        dest: /etc/vsftpd.conf
+        # owner: root
+        # group: root
+        # mode: '0644'
+      become: true
+
+    - name: Install packages
+      apt:
+        pkg:
+          - vsftpd
+        state: latest
+        update_cache: true
+      become: true
+
+
