@@ -1,0 +1,39 @@
+
+# TinyRinyRSS
+# https://tt-rss.org/wiki/InstallationNotes/
+---
+
+- name: tinytonyrss
+  gather_facts: false
+  hosts: mediapc
+
+  vars:
+    image: nodered/node-red
+
+  tasks:
+
+    - name: Check for python requirements on the target host
+      community.general.python_requirements_info:
+        dependencies:
+          - ansible
+
+    - name: Create directory
+      ansible.builtin.file:
+        path: ~/ttrss
+        state: directory
+
+    - name: Copy files to ~/ttrss
+      ansible.builtin.copy:
+        src: ../files/ttrss.env
+        dest: ~/ttrss/.env
+
+    - name: Copy files to ~/ttrss
+      ansible.builtin.copy:
+        src: ../files/ttrss-docker-compose.yml
+        dest: ~/ttrss/docker-compose.yml
+
+    - name: deploy Docker Compose stack
+      community.docker.docker_compose_v2:
+        project_src: ~/ttrss
+        files:
+          - ~/ttrss/docker-compose.yml

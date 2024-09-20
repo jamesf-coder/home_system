@@ -1,0 +1,43 @@
+
+# Ansible/docker guide:
+# https://docs.ansible.com/ansible/latest/collections/community/docker/docsite/scenario_guide.html
+---
+
+- name: nodered
+  gather_facts: false
+  hosts: mediapc
+
+  vars:
+    image: nodered/node-red
+
+  tasks:
+
+    - name: Check for python requirements on the target host
+      community.general.python_requirements_info:
+        dependencies:
+          - ansible
+
+    - name: Pull default Docker image
+      community.docker.docker_image:
+        name: "{{ image }}"
+        tag: latest
+        source: pull
+
+    - name: Start nodered
+      community.docker.docker_container:
+        env:
+          UID: "1001" # fixes permissions problems on /data volume
+        volumes:
+          - "{{ NODERED_HOME_DIR }}:/data"
+        ports:
+          - 1880:1880
+        image: "{{ image }}"
+        name: nodered
+        restart_policy: unless-stopped
+
+    - name: Fudge the mode of the NODERED_HOME_DIR folder allow access for nodered
+      file:
+        path: "{{ NODERED_HOME_DIR }}"
+        owner: 'codeglitch'
+      become: true
+

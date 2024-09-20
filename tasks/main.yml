@@ -20,3 +20,6 @@
 
 - name: Import rclone playbook
   import_playbook: rclone.yml
+
+- name: Import nodered playbook
+  import_playbook: nodered.yml

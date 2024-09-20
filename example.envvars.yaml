@@ -5,4 +5,5 @@ CLOUDFLARE_DNS_REC: example.com
 FTP_MOUNT: /mount/ftp
 JELLYFIN_MEDIA_DIR: /media/jellyfin
 DNS_REC: mydomain.net
-RCLONE_MUSIC_DESTINATION: /media/music
+RCLONE_MUSIC_DESTINATION: /media/music#
+NODERED_HOME_DIR: /home/user/nodered
